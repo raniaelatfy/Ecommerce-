@@ -1,0 +1,97 @@
+﻿@model Ecommerce.Model.ViewModels.ProductImagesVM
+@{
+
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<form id="submitform" method="post" enctype="multipart/form-data">
+    @*<h3>@Model.Product.Name</h3>*@
+    <div class="form-horizontal" style="padding-left:100px;">
+        <input type="hidden" name="ID" class="form-control" />
+        <div class="form-group">
+            <label class="col-12">
+                Images:
+            </label>
+            <input type="file" id="image" name="Image" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-warning " id="btnsubmit" />
+
+        </div>
+
+    </div>
+</form>
+@Html.Partial("GetImages")
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+
+        LoadDataImages();
+        });
+
+
+        var LoadDataImages = function () {
+            $.ajax({
+                url: '/ProductImages/LoadImages',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'Images' },
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return Delete(' + code + ')"  title="Details" class="btn btn-info"> Details</a>';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return IsMine(' + code + ')"  title="Details" class="btn btn-info"> Details</a>';
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        };
+         function Delete(id) {
+        if (confirm('Are you sure you want delete this product?')) {
+                $.ajax({
+                    type: "Post",
+                    url: '@Url.Action("DeleteImage", "Product")/' + id,
+                    datatype: 'JSON',
+                    success: function (data) {
+                        if (data.done) {
+                            LoadDataGrid();
+                            alert(data.message);
+                        } else
+                        {
+                            alter(data.message);
+                            LoadDataGrid();
+                        }
+                    }
+                })
+            }
+    }
+
+    </script>
+
+    }
+

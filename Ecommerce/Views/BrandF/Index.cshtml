@@ -1,0 +1,135 @@
+﻿@model List<Ecommerce.Model.Brand>
+@{
+    
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<div class="container">
+    <h2>Brand</h2>
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info btn-lg" onclick="AddBrand()">create new Brand</button>
+
+
+
+</div>
+@Html.Partial("GetData")
+@section scripts{
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            LoadDataGrid();
+        });
+
+
+        var LoadDataGrid = function () {
+            $.ajax({
+                url: '/BrandF/LoadData',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+                            { 'data': 'Name' },
+
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return Details(' + code + ')"  title="Details" class="btn btn-info"> Details</a>';
+                                    btns += '<a href="javascript:void(0)" onclick=" return Edit(' + code + ')"  title="Edit" class="btn btn-success">Edit</a>';
+                                    btns += '<a href="javascript:void(0)"  onclick=" return Delete(' + code + ')"  title="Delete" class="btn btn-danger">Delete</a>';
+
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        }
+          function AddBrand() {
+
+            $.ajax({
+
+                type: "Get",
+                url: '@Url.Action("AddEditDetails", "BrandF")',
+                contentType: "application/json;charset=utf-8",
+
+                success: function (data) {
+                    $("#body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+
+                });
+        }
+        function Edit(id) {
+               $.ajax({
+
+                type: "Get",
+                data: { id:id,Trigger: 'Edit' },
+                url: '@Url.Action("AddEditDetails", "BrandF")/' + id,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#subcategoryModal .modal-body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+            });
+        }
+
+        function Details(id) {
+                        $.ajax({
+
+                type: "Get",
+                data: { id: id,Trigger: 'Details' },
+                url: '@Url.Action("AddEditDetails", "BrandF")/' + id,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#subcategoryModal .modal-body").html(data);
+                    $("#subcategoryModal").modal("show");
+
+
+                }
+            });
+        }
+        function Delete(id) {
+            $.ajax({
+
+              type: "Post",
+              url: '@Url.Action("Delete", "BrandF")/' + id,
+              success: function (data) {
+                  if (data.success) {
+                      LoadDataGrid();
+                      alert(data.message);
+
+
+                  }
+                  else {
+                      alert(data.message)
+                  }
+                  }
+
+             });
+        }
+    </script>
+}
+    

@@ -1,0 +1,110 @@
+﻿@model Ecommerce.Model.ViewModels.ProductVM
+
+@using (Ajax.BeginForm("AddEditDetails", "Product", new AjaxOptions
+{ HttpMethod = "post", UpdateTargetId = "details", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+    if (ViewBag.Add == "Add" || ViewBag.Trigger == "Edit" || ViewBag.Trigger == "Details")
+    {
+
+        Html.HiddenFor(Model => Model.ID);
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Name, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Name, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(model => model.BrandFK, new { @class = "col-md-3" })
+            @Html.DropDownListFor(model => model.BrandFK, (SelectList)ViewBag.brands, new { @class = "form-control col-md-6" })
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(model => model.CategoryFK, new { @class = "col-md-3" })
+            @Html.DropDownListFor(model => model.CategoryFK, (SelectList)ViewBag.categories, new { @class = "form-control col-md-6" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Description, new { @class = "control-label" })
+            @Html.TextAreaFor(Model => Model.Description, new { HtmlAttribute = new { @class = "form-control", @row = 5 } })
+            @Html.ValidationMessageFor(n => n.Description, "")
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.ShortDescription, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.ShortDescription, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.ShortDescription, "")
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Price, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Price, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Price, "")
+        </div>
+
+        if (Model.ID == 0)
+        {
+            <div>
+                <input type="submit" value="Add" class="btn btn-primary" />
+                <input class="btn btn-warning" type="reset" value="Clear">
+
+            </div>
+        }
+
+        else if (Model.ID != 0)
+        {
+            if (ViewBag.Trigger == "Details")
+            {
+
+
+                <script>
+                    var inputs = document.getElementsByTagName("input");
+                    for (var i = 0; i < inputs.length; i++) {
+                        inputs[i].disabled = true;
+                    }
+                    var textareas = document.getElementsByTagName("textarea");
+                    for (var i = 0; i < textareas.length; i++) {
+                        textareas[i].disabled = true;
+                    }
+                    var selects = document.getElementsByTagName("select");
+                    for (var i = 0; i < selects.length; i++) {
+                        selects[i].disabled = true;
+                    }
+                    $('#Description').summernote('disable');
+                </script>
+
+            }
+
+            else
+            {
+                <input type="submit" value="Update" class="btn btn-primary" />
+            }
+        }
+
+
+    }
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#Description').summernote();
+    })
+    function OnSuccess(data) {
+        $("#subcategoryModal").modal("hide");
+        if (data.done) {
+            LoadDataGrid();
+            alert(data.message);
+          
+
+        } else {
+            alert(data.message);
+        }
+
+    }
+    function OnFailure() {
+        alert('Error');
+    }
+
+</script>
+

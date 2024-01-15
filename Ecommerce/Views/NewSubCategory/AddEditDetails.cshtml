@@ -1,0 +1,110 @@
+﻿@model Ecommerce.Model.SubCategoryVM
+
+
+@using (Ajax.BeginForm("AddEditDetails", "NewSubCategory", new AjaxOptions
+{ HttpMethod = "post", UpdateTargetId = "details", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+    if (ViewBag.Add == "Add" || ViewBag.Edit == "Edit" || ViewBag.Details == "Details")
+    {
+
+        Html.HiddenFor(Model => Model.ID);
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Name, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Name, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Description, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Description, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.CategoryFK, new { @class = "control-label" })
+            @Html.DropDownListFor(Model => Model.CategoryFK, (SelectList)ViewBag.category, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        if (Model.ID == 0)
+        {
+            <div>
+                <input type="submit" value="Add" class="btn btn-primary" />
+                <input class="btn btn-warning" type="reset" value="Clear">
+
+            </div>
+        }
+
+        else if (Model.ID != 0)
+        {
+            if (ViewBag.Details == "Details")
+            {
+
+                @*<script>
+                        $("#details").prop("disabled", true);
+                    </script>*@
+                <script>
+                    var inputs = document.getElementsByTagName("input");
+                    for (var i = 0; i < inputs.length; i++) {
+                        inputs[i].disabled = true;
+                    }
+                    var textareas = document.getElementsByTagName("textarea");
+                    for (var i = 0; i < textareas.length; i++) {
+                        textareas[i].disabled = true;
+                    }
+                    var selects = document.getElementsByTagName("select");
+                    for (var i = 0; i < selects.length; i++) {
+                        selects[i].disabled = true;
+                    }
+                </script>
+
+            }
+
+            else
+            {
+                <input type="submit" value="Update" class="btn btn-primary" />
+            }
+        }
+
+        @*if (ViewBag.Details == "Details")
+            {
+
+                    <script>
+                        $("#details").prop("disabled", true);
+                    </script>
+
+
+              }
+                else
+                {
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                    if (Model.ID == 0)
+                    {
+                        <input class="btn btn-warning" type="reset" value="Clear">
+
+                    }
+                }*@
+    }
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+    function OnSuccess(data) {
+        if (data.success) {
+            alert(data.message);
+            $("#subcategoryModal").modal("hide");
+
+            LoadDataGrid();
+        }
+
+        else {
+            alert(data.message)
+        }
+    }
+    function OnFailure(data) {
+        alert('Error');
+    }
+</script>

@@ -1,0 +1,178 @@
+﻿ @model Ecommerce.Model.Brand
+  @if (ViewBag.Add == "Add" )
+   {
+<form id="submitform" method="post" enctype="multipart/form-data">
+
+    <div class="form-horizontal" style="padding-left:100px;">
+        <input type="hidden" name="ID" class="form-control" />
+        <div class="form-group">
+            <label class="col-12">
+                Brand Name:
+            </label>
+            <input type="text" id="name" name="Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="col-12">
+                Brand Description:
+            </label>
+            <input type="text" id="disription" name="Description" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="col-12">
+                Brand Image:
+            </label>
+            <input type="file" id="image" name="Image" class="form-control" @*required*@ />
+        </div>
+       
+        
+        <div class="form-group">
+            <input type="submit" value="Add" class="btn btn-warning " id="btnsubmit" />
+            <input type="reset" value="clear" class="btn btn-danger" />
+        </div>
+        
+    </div>
+</form>
+   }
+   else if(ViewBag.Edit=="Edit" || ViewBag.Details == "Details")
+            {
+<form id="submitform" method="post" enctype="multipart/form-data">
+
+    <div class="form-horizontal" style="padding-left:100px;">
+        <input type="hidden" name="ID" value=@Model.ID class="form-control" />
+        <div class="form-group">
+            <label class="col-12">
+                Brand Name:
+            </label>
+            <input type="text" id="name" name="Name" value=@Model.Name class="form-control" />
+        </div>
+        <div class="form-group">
+            <label class="col-12">
+                Brand Description:
+            </label>
+            <input type="text" id="disription" name="Description" value=@Model.Description class="form-control" />
+        </div>
+        @if (ViewBag.Details == "Details")
+        {
+            <div class="form-group">
+                <label class="col-12">
+                    Brand Image:
+                </label>
+
+                <img src="~/Attach/Brand/@Model.Image" width="50px" height="50px" />
+                @*<input type = "file" id = "image" name = "Image" class="form-control" />*@
+
+            </div>
+
+        }
+        else
+        {
+            <div class="form-group">
+                <label class="col-12">
+                    Brand Image:
+                </label>
+               
+                <img src="/Attach/Brand/@Model.Image" width="50px" height="50px" />
+              
+                <input type = "file" id = "image" name = "image" class="form-control" />
+                
+            </div>
+
+        }
+
+        @if (ViewBag.Details == "Details")
+        {
+
+
+            <script>
+                var inputs = document.getElementsByTagName("input");
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].disabled = true;
+                }
+                var textareas = document.getElementsByTagName("textarea");
+                for (var i = 0; i < textareas.length; i++) {
+                    textareas[i].disabled = true;
+                }
+                var selects = document.getElementsByTagName("select");
+                for (var i = 0; i < selects.length; i++) {
+                    selects[i].disabled = true;
+                }
+            </script>
+
+        }
+
+        else
+        {
+            <input type="submit" value="Update" class="btn btn-primary" />
+        }
+
+    </div>
+</form>
+            }
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    $("#submitform").validate({
+        rules: {
+            Name: {
+                required: true,
+                minlength: 3,
+                maxlength: 5
+            },
+            Description: {
+                required: true,
+                minlength: 3
+            },
+            Image: {
+                required: true,
+
+            }
+
+        },
+        messages: {
+            Name: {
+                required: "Please enter name",
+                minlength: "Name should be at least 3 characters",
+                maxlength: "Name should be at maximum 5 characters"
+            },
+            Description: {
+                required: "Please enter disription",
+                number: "disription should be at least 3 characters"
+
+            },
+            Image: {
+                required: "Please enter image",
+            }
+
+        },
+        submitHandler: function (form) {
+
+            const formData = new FormData($('#submitform')[0]);
+            PostForm(formData);
+        }
+    });
+    var PostForm = function (formData) {
+        $.ajax({
+            url: '/BrandF/AddEditDetails',
+            method: "POST",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false
+
+        }).done(function (data) {
+            LoadDataGrid();
+            alert(data.message);
+            $("#subcategoryModal").modal("hide");
+       
+        }).fail(function (data) {
+            alert(data.message);
+        });;
+    }
+
+
+</script>
+
+
+

@@ -1,0 +1,37 @@
+﻿
+@model Ecommerce.Model.Category
+@{
+    ViewBag.tittle = "DETAILS";
+}
+@using (Html.BeginForm("details", "Category", FormMethod.Post))
+{
+    
+    
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@ViewBag.tittle</h4>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(Model => Model.ID)
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.Name, new { @class = "control-label"})
+                @Html.EditorFor(Model => Model.Name, new { HtmlAttribute = new { @class = "form-control" , disabled = "true" } })
+                @Html.ValidationMessageFor(n => n.Name, "")
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(Model => Model.Description, new { @class = "control-label" })
+                @Html.EditorFor(Model => Model.Description, new { HtmlAttribute = new { @class = "form-control", disabled = "true" } })
+                @Html.ValidationMessageFor(n => n.Name, "")
+            </div>
+
+
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+}

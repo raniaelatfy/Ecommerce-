@@ -1,0 +1,72 @@
+﻿@model List<Ecommerce.Model.ProductImage>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+@Html.Partial("GetData")
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+
+            LoadDataGrid();
+        });
+
+
+        var LoadDataGrid = function () {
+            $.ajax({
+                url: '/ProductImages/LoadData',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+
+                            { 'data': 'ProductName' },
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return AddImages(' + code + ')"  title="Details" class="btn btn-info"> AddImages</a>';
+
+
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        }
+        function AddImages(id) {
+        $.ajax({
+			type: "Get",
+            url: "@Url.Action("AddImages", "ProductImages")/" + id,
+            
+            datatype: 'JSON',
+			success: function (data) {
+                $("#subcategoryModal .modal-body").html(data);
+				$("#subcategoryModal").modal("show");
+			}
+		});
+        };
+    </script>
+}

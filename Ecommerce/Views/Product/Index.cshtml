@@ -1,0 +1,159 @@
+﻿@model List<Ecommerce.Model.Product>
+@{
+
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<div class="container">
+    <h2>Product</h2>
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info btn-lg" onclick="AddProduct()">create new Prouduct</button>
+
+
+
+</div>
+@Html.Partial("GetData")
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+
+            LoadDataGrid();
+        });
+
+
+        var LoadDataGrid = function () {
+            $.ajax({
+                url: '/Product/LoadData',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+                            { 'data': 'Name' },
+                            { 'data': 'CategoryName' },
+                            { 'data': 'BrandName' },
+                            { 'data': 'Description' },
+                            { 'data': 'Price' },
+                           
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+                                    btns += '<a href="javascript:void(0)" onclick="return AddImages(' + code + ')"  title="Details" class="btn btn-success"> AddImages</a>';
+
+
+                                    btns += '<a href="javascript:void(0)" onclick="return Details(' + code + ')"  title="Details" class="btn btn-info"> Details</a>';
+                                    btns += '<a href="javascript:void(0)" onclick=" return Edit(' + code + ')"  title="Edit" class="btn btn-success">Edit</a>';
+                                    btns += '<a href="javascript:void(0)"  onclick=" return Delete(' + code + ')"  title="Delete" class="btn btn-danger">Delete</a>';
+
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        }
+           function AddImages(id) {
+        $.ajax({
+			type: "Get",
+            url: "@Url.Action("AddImages", "Product")/" + id,
+
+            datatype: 'JSON',
+			success: function (data) {
+                $("#subcategoryModal .modal-body").html(data);
+				$("#subcategoryModal").modal("show");
+			}
+		});
+        };
+
+        function AddProduct() {
+
+            $.ajax({
+
+                type: "Get",
+                url: '@Url.Action("AddEditDetails", "Product")',
+                contentType: "application/json;charset=utf-8",
+
+                success: function (data) {
+                    $("#body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+
+                });
+    }
+      function Edit(id) {
+        $.ajax({
+			type: "Get",
+            url: "@Url.Action("AddEditDetails", "Product")/" + id,
+            data: { Trigger: "Edit" },
+            datatype: 'JSON',
+			success: function (data) {
+                $("#subcategoryModal .modal-body").html(data);
+				$("#subcategoryModal").modal("show");
+			}
+		});
+        };
+    function Details(id) {
+         $.ajax({
+			type: "Get",
+             url: "@Url.Action("AddEditDetails", "Product")/" + id,
+             data: { Trigger: "Details" },
+              datatype: 'JSON',
+			success: function (data) {
+                $("#subcategoryModal .modal-body").html(data);
+                $("#subcategoryModal").modal("show");
+			}
+		});
+        };
+    function Delete(id) {
+        if (confirm('Are you sure you want delete this product?')) {
+                $.ajax({
+                    type: "Post",
+                    url: '@Url.Action("Delete", "Product")/' + id,
+                    datatype: 'JSON',
+                    success: function (data) {
+                        if (data.done) {
+                            LoadDataGrid();
+                            alert(data.message);
+                        } else
+                        {
+                            alter(data.message);
+                            LoadDataGrid();
+                        }
+                    }
+                })
+            }
+        }
+           function AddImages(id) {
+        $.ajax({
+			type: "Get",
+            url: "@Url.Action("AddImages", "Product")/" + id,
+
+            datatype: 'JSON',
+			success: function (data) {
+                $("#subcategoryModal .modal-body").html(data);
+				$("#subcategoryModal").modal("show");
+			}
+		});
+        };
+    </script>
+    }
+

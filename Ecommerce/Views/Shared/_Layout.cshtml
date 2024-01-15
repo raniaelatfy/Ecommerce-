@@ -1,0 +1,76 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.tittle</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/DataTables-1.10.18/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+</head>
+<body>
+
+    <div class="modal fade" id="editModal" role="dialog">
+        <div class="modal-dialog">
+     
+            <p>@Html.Partial("edit")</p>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@ViewBag.tittle</h4>
+                </div>
+                <div class="modal-body">
+                    <p>@Html.Partial("create")</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="detailsmodal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <p>@Html.Partial("details")</p>
+
+        </div>
+    </div>
+
+ 
+
+    <div>
+        @RenderBody();
+    </div>
+
+    <script src="~/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/DataTables-1.10.18/js/dataTables.jqueryui.min.js"></script>
+    <script src="~/DataTables-1.10.18/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.13.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @RenderSection("scripts", false)
+</body>
+</html>

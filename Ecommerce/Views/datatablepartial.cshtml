@@ -1,0 +1,135 @@
+﻿@*@model List<Ecommerce.Model.Category>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="card card-box">
+                <div class="card-body table-responsive">
+                    <table class="table dataTable" id="table0" style="width:100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>
+                                  ID
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+
+                               <th><i class="fa fa-cogs"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+        @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>*@
+
+
+                    <!--</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>-->
+@*@section scripts{
+
+    <script>
+
+    var LoadDataGrid = function () {
+        $.ajax({
+            url: '/Category/index',
+            method: 'Get',
+            data: {},
+            success: function (data) {
+                //DataTable
+                var dtObj = {
+                data: data,
+                responsive: true,
+                retrieve: true,
+                ordering: false,
+                dom: 'Bfrtip',
+                //buttons: dtBtns,
+                columns: [
+                    { 'data': 'ID' },
+                    { 'data': 'Name' },
+
+                    {
+                        'data': 'ID',
+                        'searchable': true,
+						'sortable': true,
+                        'render': function (code) {
+
+                            var btns = '';
+
+                            btns += '<a href="javascript:void(0)" onclick="return details(' + code + ')"  title="Details"><i class="fa fa-info-circle text-info"></i></a>';
+                            btns += '<a href="javascript:void(0)" onclick="return Edit('+code+')"  title="Edit"><i class="fa fa-edit text-success"></i></a>';
+                            btns += '<a href="javascript:void(0)" id="deleteBlogs" onclick="return Delete('+code+')"  title="Delete"><i class="fa fa-trash text-danger"></i></a>';
+
+                            return btns;
+						}
+					}
+                ]
+            };
+
+            $("#table0").dataTable().fnDestroy();
+            $("#table0").dataTable(dtObj);
+            }
+        });
+    }
+
+
+    var details = function (code) {
+          $.ajax({
+            url: '/Category/details',
+              method: 'Get',
+              data: { code: code, trigger: '@ec.DAL.Enum.CommonEnums.formTypes.Detail.ToString()' },
+            success: function (data) {
+                _generalModal.modal('show');
+                _generalModalBody.html(data);
+                _generalModalTitle.text('@PearKidsWebSite.LangPack.BlogsRS.ShowBlogs');
+                $(".input0").attr("disabled",true);
+            }
+        });
+    }
+    var Edit= function (code) {
+         $.ajax({
+            url: '/Admin/Blogs/BlogsForm',
+              method: 'Get',
+              data: { code: code, trigger: '@PearKidsWebSite.DAL.Enum.CommonEnums.formTypes.Edit.ToString()' },
+            success: function (data) {
+                _generalModal.modal('show');
+                _generalModalBody.html(data);
+                _generalModalTitle.text('@PearKidsWebSite.LangPack.BlogsRS.UpdateBlogs');
+            }
+        });
+    }*@
+    //var Delete = function (code) {
+
+
+    //                const parms = { code: code };
+
+    //                const __ajx = {
+    //                    url: '/Admin/Blogs/DeleteBlogs',
+    //                    method: 'POST',
+    //                    data: parms
+    //            };
+
+    //                $.ajax(__ajx).done(function (response, s, xhr) {
+
+    //                   // if (__validateSessionForCurrentUser(xhr) === false) return;
+
+    //                   if (response.done) {
+    //                        toastr.success(response.message);
+    //                        LoadDataGrid();
+    //                    } else {
+    //                        toastr.error(response.message);
+    //                    }
+
+    //                }).fail(function (response, s, xhr) {
+    //                    toastr.error(response);
+    //                });
+    //   }
+
+    //}
+    @*</script>
+
+}*@*

@@ -1,0 +1,78 @@
+﻿@model List<Ecommerce.Model.Category>
+@{
+    Layout = "~/views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+
+    <div class="container">
+        <h2>Categories</h2>
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">create new category</button>
+       
+
+    </div>
+
+@Html.Partial("GetCategory")
+@section scripts {
+ <script>
+        $(document).ready(function() {
+
+            LoadDataGrid();
+        });
+        var LoadDataGrid = function() {
+            $.ajax({
+                url: '/Category/LoadData',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        //buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+                            { 'data': 'Name' },
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="Category/edit/' + code + '" data-toggle="modal" data-target="#editModal" class="btn btn-success" >edit</a>';
+                                    btns += '<a href="Category/details/' + code + '" data-toggle="modal" data-target="#detailsmodal" class="btn btn-info" >Details</a>';
+                                    btns += '<a href="Category/delete/' + code + '"  class="btn btn-danger">delete</a>';
+
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#table0").dataTable().fnDestroy();
+                    $("#table0").dataTable(dtObj);
+                }
+            });
+
+        }
+
+     
+
+    </script>
+}
+
+
+
+  
+

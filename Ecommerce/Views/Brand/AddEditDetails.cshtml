@@ -1,0 +1,53 @@
+﻿@model Ecommerce.Model.ViewModels.BrandVM
+@using (Ajax.BeginForm("AddEditDetails", "Brand", new AjaxOptions { HttpMethod = "post", OnSuccess = "onsuccess", OnFailure = "onfailure" }, new { enctype = "multipart/form-data" }))
+{
+
+    if (ViewBag.Add == "Add")
+    {
+        @Html.HiddenFor(Model => Model.ID)
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Name, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Name, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(Model => Model.Description, new { @class = "control-label" })
+            @Html.EditorFor(Model => Model.Description, new { HtmlAttribute = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(n => n.Name, "")
+        </div>
+        <div class="form-group">
+            <input type="file" name="photo" class="img-thumbnail" />
+        </div>
+        <div>
+            <input type="submit" value="Add" class="btn btn-primary" />
+
+            <input class="btn btn-warning" type="reset" value="Clear">
+
+        </div>
+    }
+
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+    function onsuccess(data) {
+        
+        if (data.done) {
+            alert(data.message);
+            $("#subcategoryModal").modal("hide");
+           
+            LoadDataGrid();
+        }
+        else {
+            alert(data.message);
+        }
+    }
+    function onfailure(data) {
+        alert('Error');
+    }
+</script>

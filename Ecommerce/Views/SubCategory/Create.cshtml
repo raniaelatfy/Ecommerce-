@@ -1,0 +1,52 @@
+﻿@model Ecommerce.Model.SubCategoryVM
+
+@{
+    ViewBag.tittle = "EDIT SubCategory";
+}
+@using (Ajax.BeginForm("Create", "SubCategory", new AjaxOptions { HttpMethod = "post", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+
+
+    @Html.HiddenFor(Model => Model.ID)
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.Name, new { @class = "control-label" })
+        @Html.EditorFor(Model => Model.Name, new { HtmlAttribute = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(n => n.Name, "")
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.Description, new { @class = "control-label" })
+        @Html.EditorFor(Model => Model.Description, new { HtmlAttribute = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(n => n.Name, "")
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(Model => Model.CategoryFK, new { @class = "control-label" })
+        @Html.DropDownListFor(Model => Model.CategoryFK, (SelectList)ViewBag.category, new { HtmlAttribute = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(n => n.Name, "")
+    </div>
+    <div>
+        <input type="submit" value="Add" class="btn btn-primary" />
+       
+        <input class="btn btn-warning" type="reset" value="Clear">
+
+    </div>
+
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+    function OnSuccess() {
+        alert("Creation Done");
+        $("#subcategoryModal").modal("hide");
+
+        LoadDataGrid();
+    }
+    function OnFailure(data) {
+        alert('Error');
+    }
+</script>

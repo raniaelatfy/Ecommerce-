@@ -1,0 +1,166 @@
+﻿@model List<Ecommerce.Model.SubCategoryVM>
+@{
+
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+    ViewBag.Title = "Index";
+
+
+}
+
+<div class="container">
+    <h2>Categories</h2>
+    <!-- Trigger the modal with a button -->
+    @*<button type="button" class="btn btn-info btn-lg" onclick="AddSubCategory()">create new subcategory</button>*@
+    <a class="btn btn-success" style="margin-bottom:10px " onclick="AddSubCategory()">
+
+        Add Sub Catigory
+    </a>
+
+
+</div>
+@Html.Partial("GetData")
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            LoadDataGrid();
+        });
+
+
+        var LoadDataGrid = function () {
+            $.ajax({
+                url: '/SubCategory/LoadData',
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                  //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                       // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+                            { 'data': 'Name' },
+                            {'data':'CategoryName'},
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return Details(' + code + ')"  title="Details" class="btn btn-info"> Details</a>';
+                                    btns += '<a href="javascript:void(0)" onclick=" return Edit(' + code + ')"  title="Edit" class="btn btn-success">Edit</a>';
+                                    btns += '<a href="javascript:void(0)"  onclick=" return Delete(' + code + ')"  title="Delete" class="btn btn-danger">Delete</a>';
+
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        }
+       
+
+
+        function AddSubCategory() {
+
+            $.ajax({
+
+                type: "Get",
+                url: "@Url.Action("Create","SubCategory")",
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+
+                });
+        }
+        function Details(id) {
+            $.ajax({
+
+                type: "Get",
+                url: '@Url.Action("Details","SubCategory")/' + id,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+            });
+        }
+          function Edit(id) {
+            $.ajax({
+
+                type: "Get",
+                url: '@Url.Action("Edit","SubCategory")/' + id,
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    $("#subcategoryModal .modal-body").html(data);
+                    $("#subcategoryModal").modal("show");
+                }
+            });
+        }
+
+
+          function Delete(id) {
+            $.ajax({
+
+                                type: "post",
+                                url: '@Url.Action("Delete","SubCategory")/' + id,
+                                success: function (data) {
+                                    if (data.success) {
+                                        alert("Deleted successfully!");
+                                        LoadDataGrid();
+                                      
+                                    }
+                                }
+
+             });
+        }
+
+        //function Delete (code) {
+
+
+        //    const parms = { code: code };
+
+        //    const __ajx = {
+        //        url: '/SubCategory/Delete',
+        //        method: 'POST',
+        //        data: parms
+        //    };
+
+        //    $.ajax(__ajx).done(function (response, s, xhr) {
+
+        //        // if (__validateSessionForCurrentUser(xhr) === false) return;
+
+        //        if (response.done) {
+        //            toastr.success(response.message);
+        //            LoadDataGrid();
+        //        } else {
+        //            toastr.error(response.message);
+        //        }
+
+        //    }).fail(function (response, s, xhr) {
+        //        toastr.error(response);
+        //    })};
+        
+    </script>
+
+
+}
+<script>
+    function show() {
+        $("#subcategoryModal").modal("show");
+    }
+</script>

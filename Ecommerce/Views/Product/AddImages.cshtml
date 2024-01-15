@@ -1,0 +1,169 @@
+﻿@model Ecommerce.Model.ProductImage
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<form id="submitform" method="post" enctype="multipart/form-data">
+  
+    <div class="form-horizontal" style="padding-left:100px;">
+        <input type="hidden" name="ID"  id="ID" class="form-control" value="@ViewBag.ID" />
+        <div class="form-group">
+            <label class="col-12">
+                Images:
+            </label>
+            <input type="file" id="image" name="Image"  class="form-control" multiple />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-warning " id="btnsubmit" />
+
+        </div>
+
+    </div>
+</form>
+
+@Html.Partial("GetImages")
+
+<script>
+    $(document).ready(function () {
+
+        LoadDataImages();
+        });
+
+
+        var LoadDataImages = function () {
+            $.ajax({
+                url: '/Product/LoadImages/' + @ViewBag.ID,
+                method: 'Get',
+                data: {},
+                success: function (data) {
+                    //  DataTable
+                    var dtObj = {
+                        data: data,
+                        responsive: true,
+                        retrieve: true,
+                        ordering: true,
+                        dom: 'Bfrtip',
+                        // buttons: dtBtns,
+                        columns: [
+                            { 'data': 'ID' },
+                            {
+                                'data': 'Images', "render": function (data) {                                    return '<a href="/Attach/Product/' + data + '" target="_blank" ><img src="/Attach/Product/' + data + '" style="height:50px;width:50px;"/></a>';                                }
+ },
+
+                            {
+                                'data': 'ID',
+                                'searchable': true,
+                                'sortable': true,
+                                'render': function (code) {
+
+                                    var btns = '';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return Delete(' + code + ')"   class="btn btn-danger"> Delete</a>';
+
+                                    btns += '<a href="javascript:void(0)" onclick="return IsMain(' + code + ')"   class="btn btn-success"> IsMain</a>';
+                                    return btns;
+                                }
+                            }
+                        ]
+                    };
+
+                    $("#subCategoryTable").dataTable().fnDestroy();
+                    $("#subCategoryTable").dataTable(dtObj);
+                }
+            });
+
+        };
+
+        function IsMain(id) {
+            if (confirm('Are you sure you want to make this image the main image?'));
+            var productid = $('#ID').val();
+            console.log(productid);
+           {
+                 $.ajax({
+                     type: "Get",
+                  
+                     url: '@Url.Action("SetMain", "Product")/' + id,
+                     data: { productFK: productid },
+                    datatype: 'JSON',
+                    success: function (data) {
+                        if (data.done) {
+                            LoadDataImages();
+                            alert(data.message);
+                        } else
+                        {
+                            alter(data.message);
+                            LoadDataImages();
+                        }
+                    }
+                })
+            }
+        }
+         function Delete(id) {
+        if (confirm('Are you sure you want delete this productimage?')) {
+                $.ajax({
+                    type:"Post",
+                    url:'@Url.Action("DeleteImages", "Product")/' + id,
+                    datatype: 'JSON',
+                    success: function (data) {
+                        if (data.done) {
+                            LoadDataImages();
+                            alert(data.message);
+                        } else
+                        {
+                            alter(data.message);
+                            LoadDataImages();
+                        }
+                    }
+                })
+            }
+    }
+
+        $("#submitform").validate({
+            rules: {
+
+        Image: {
+            required: true,
+
+            }
+
+        },
+        messages: {
+
+        Image: {
+            required: "Please enter image",
+            }
+
+        },
+        submitHandler: function (form) {
+
+            const formData = new FormData($('#submitform')[0]);
+        PostForm(formData);
+        }
+    });
+        var PostForm = function (formData) {
+            $.ajax({
+                url: '/Product/AddImages',
+                method: "POST",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+
+            }).done(function (data) {
+                LoadDataGrid();
+                alert(data.message);
+                $("#subcategoryModal").modal("hide");
+
+            }).fail(function (data) {
+                alert(data.message);
+            });;
+    }
+
+
+</script>
+
+  
+
+
+
